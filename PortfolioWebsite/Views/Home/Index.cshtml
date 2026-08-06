@@ -1,4 +1,5 @@
-﻿@{
+﻿@model PortfolioWebsite.Models.HomeViewModel
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -6,13 +7,12 @@
 
     <div class="container">
 
-        <h1>Hi, I'm Mark 👋</h1>
+        <h1>Hi, I'm @Model.About.Name 👋</h1>
 
-        <h2>ASP.NET Core Developer</h2>
+        <h2>@Model.About.Role</h2>
 
         <p>
-            I build clean, fast and scalable web applications using
-            ASP.NET Core MVC and C#.
+            @Model.About.Description
         </p>
 
         <a href="#projects" class="btn btn-dark">
@@ -22,3 +22,144 @@
     </div>
 
 </section>
+
+<section id="about" class="container py-5">
+
+    <h2>About Me</h2>
+
+    <hr />
+
+    <p>
+        @Model.About.Description
+    </p>
+
+    <p>
+        <strong>Education:</strong>
+        @Model.About.Education
+    </p>
+
+</section>
+
+<section id="skills" class="container py-5">
+
+    <h2>Skills</h2>
+
+    <div class="row">
+
+        @foreach (var skill in Model.Skills)
+        {
+            <div class="col-md-4 mb-3">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <h5>@skill.Name</h5>
+
+                        <p>@skill.Level</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</section>
+
+
+<section id="projects" class="container py-5">
+
+    <h2 class="mb-4">Projects</h2>
+
+    <div class="row">
+
+        @foreach (var project in Model.Projects)
+        {
+            <div class="col-md-4 mb-4">
+
+                <div class="card h-100 shadow-sm">
+
+                    <div class="card-body">
+
+                        <h4>@project.Title</h4>
+
+                        <p>@project.Description</p>
+
+                        <span class="badge bg-dark">
+                            @project.Technology
+                        </span>
+
+                    </div>
+
+                    <div class="card-footer bg-white">
+
+                        <a href="@project.GithubLink"
+                           target="_blank"
+                           class="btn btn-outline-dark btn-sm">
+
+                            GitHub
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</section>
+
+
+<section id="contact" class="container py-5">
+
+    <h2>Contact Me</h2>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.Message
+        </div>
+    }
+
+    <form asp-action="Contact" method="post">
+
+        <div class="mb-3">
+            <label asp-for="Contact.Name"></label>
+            <input asp-for="Contact.Name" class="form-control" />
+            <span asp-validation-for="Contact.Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Contact.Email"></label>
+            <input asp-for="Contact.Email" class="form-control" />
+            <span asp-validation-for="Contact.Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Contact.Message"></label>
+            <textarea asp-for="Contact.Message"
+                      class="form-control"
+                      rows="5"></textarea>
+
+            <span asp-validation-for="Contact.Message"
+                  class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-dark">
+            Send Message
+        </button>
+
+    </form>
+
+</section>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
