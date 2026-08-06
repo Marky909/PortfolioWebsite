@@ -34,7 +34,7 @@ namespace PortfolioWebsite.Controllers
             var about = new About
             {
                 Name = "Mark",
-                Role = "Backend Developer",
+                Role = "Junior Backend Developer",
                 Description = "Passionate about building web applications using ASP.NET Core MVC and C#.",
                 Education = "BSc CSIT Student currently in 6th sem"
             };
