@@ -1,34 +1,61 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using PortfolioWebsite.Models;
 
 namespace PortfolioWebsite.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly string _connectionString;
+        public HomeController(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
         public IActionResult Index()
         {
             return View(GetPortfolioData());
         }
 
+        public DateTime GETUTCDATE()
+        {
+            return DateTime.UtcNow;
+        }
         [HttpPost]
-        public IActionResult Contact(HomeViewModel model)
+        public async Task<IActionResult> Contact(ContactForm form)
         {
             var portfolio = GetPortfolioData();
 
-            portfolio.Contact = model.Contact;
-
             if (!ModelState.IsValid)
             {
+                portfolio.Contact = form;
                 return View("Index", portfolio);
             }
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "INSERT INTO ContactForms(Name,Email,Message,CreatedAt) VALUES (@Name,@Email,@Message,@CreatedAt)";
+                SqlCommand command = new SqlCommand(query, connection);
 
-            ViewBag.Message = "Thank you! Your message has been received.";
+                command.Parameters.AddWithValue("@Name", form.Name);
+                command.Parameters.AddWithValue("@Email", form.Email);
+                command.Parameters.AddWithValue("@Message", form.Message);
+                command.Parameters.AddWithValue("@CreatedAt", form.CreatedAt);
+                    
+                await connection.OpenAsync();
+                command.ExecuteNonQuery();
 
-            portfolio.Contact = new ContactForm();
+                ModelState.Clear();
+
+                ViewBag.Message = "Thank you! Your message has been received.";
+                portfolio.Contact = new ContactForm();
+                
+            }
 
             return View("Index", portfolio);
         }
 
+     
         private HomeViewModel GetPortfolioData()
         {
             var about = new About
