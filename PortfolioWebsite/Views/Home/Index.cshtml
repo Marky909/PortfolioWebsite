@@ -140,32 +140,44 @@
     <form asp-action="Contact" method="post">
 
         <div class="mb-3">
+
             <label asp-for="Contact.Name"></label>
-            <input asp-for="Contact.Name" class="form-control" />
+
+            <input name="Name" value="@Model.Contact?.Name" class="form-control" />
+
             <span asp-validation-for="Contact.Name" class="text-danger"></span>
+
         </div>
 
         <div class="mb-3">
+
             <label asp-for="Contact.Email"></label>
-            <input asp-for="Contact.Email" class="form-control" />
+
+            <input name="Email" value="@Model.Contact?.Email" class="form-control" />
+
             <span asp-validation-for="Contact.Email" class="text-danger"></span>
+
         </div>
 
         <div class="mb-3">
-            <label asp-for="Contact.Message"></label>
-            <textarea asp-for="Contact.Message"
-                      class="form-control"
-                      rows="5"></textarea>
 
-            <span asp-validation-for="Contact.Message"
-                  class="text-danger"></span>
+            <label asp-for="Contact.Message"></label>
+
+            <textarea name="Message" class="form-control" rows="5">@Model.Contact?.Message</textarea>
+
+            <span asp-validation-for="Contact.Message" class="text-danger"></span>
+
         </div>
 
         <button class="btn btn-dark">
+
             Send Message
+
         </button>
 
     </form>
+
+
 
 </section>
 
