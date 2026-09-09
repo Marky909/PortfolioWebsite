@@ -1,16 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace PortfolioWebsite.Models
 {
     public class ContactForm
     {
-        [Required(ErrorMessage ="Name field cannot be empty!")]
-        public string Name { get; set; }
-        [Required(ErrorMessage ="Email cannot be empty!")]
-        [EmailAddress(ErrorMessage ="please enter the valid email!")]
-        public string Email { get; set; }
+        [ValidateNever]
+        public int ContactFormId { get; set; }
 
-        [Required(ErrorMessage ="Message is required!!")]
-        public string Message { get; set; }
+        [ValidateNever]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Required(ErrorMessage = "Name field cannot be empty!")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email cannot be empty!")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email!")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Message is required!!")]
+        public string Message { get; set; } = string.Empty;
     }
 }
