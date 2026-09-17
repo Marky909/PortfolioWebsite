@@ -2,6 +2,7 @@
 {
     public class About
     {
+        public int AboutId { get; set; }
         public string Name { get; set; }
 
         public string Role { get; set; }
