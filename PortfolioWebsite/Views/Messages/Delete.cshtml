@@ -1,0 +1,56 @@
+﻿@model PortfolioWebsite.Models.ContactForm
+
+@{
+    ViewData["Title"] = "Delete Message";
+}
+
+<div class="container py-5">
+
+    <h2 class="mb-4">Delete Message</h2>
+
+    <div class="alert alert-warning">
+        Are you sure you want to delete this message?
+    </div>
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <p>
+                <strong>From:</strong>
+                @Model.Name
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                @Model.Email
+            </p>
+
+            <p>
+                <strong>Message:</strong>
+                @Model.Message
+            </p>
+
+        </div>
+
+    </div>
+
+    <form asp-action="Delete"
+          method="post">
+
+        <input type="hidden"
+               asp-for="ContactFormId" />
+
+        <button type="submit"
+                class="btn btn-danger">
+            Yes, Delete
+        </button>
+
+        <a asp-action="Index"
+           class="btn btn-outline-dark">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
