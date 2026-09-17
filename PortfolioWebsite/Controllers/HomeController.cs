@@ -1,62 +1,52 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
+using PortfolioWebsite.Data;
 using PortfolioWebsite.Models;
 
 namespace PortfolioWebsite.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly string _connectionString;
-        public HomeController(IConfiguration configuration)
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-        }
-        public IActionResult Index()
-        {
-            return View(GetPortfolioData());
+            _context = context;
         }
 
-        public DateTime GETUTCDATE()
+        public async Task<IActionResult> Index()
         {
-            return DateTime.UtcNow;
+            var portfolio = await GetPortfolioData();
+
+            return View(portfolio);
         }
+
         [HttpPost]
         public async Task<IActionResult> Contact(ContactForm form)
         {
-            var portfolio = GetPortfolioData();
+            var portfolio = await GetPortfolioData();
 
             if (!ModelState.IsValid)
             {
                 portfolio.Contact = form;
                 return View("Index", portfolio);
             }
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                string query = "INSERT INTO ContactForms(Name,Email,Message,CreatedAt) VALUES (@Name,@Email,@Message,@CreatedAt)";
-                SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@Name", form.Name);
-                command.Parameters.AddWithValue("@Email", form.Email);
-                command.Parameters.AddWithValue("@Message", form.Message);
-                command.Parameters.AddWithValue("@CreatedAt", form.CreatedAt);
-                    
-                await connection.OpenAsync();
-                command.ExecuteNonQuery();
+            form.CreatedAt = DateTime.UtcNow;
 
-                ModelState.Clear();
+            _context.ContactForms.Add(form);
+            await _context.SaveChangesAsync();
 
-                ViewBag.Message = "Thank you! Your message has been received.";
-                portfolio.Contact = new ContactForm();
-                
-            }
+            ModelState.Clear();
+
+            ViewBag.Message = "Thank you! Your message has been received.";
+
+            portfolio.Contact = new ContactForm();
 
             return View("Index", portfolio);
         }
 
-     
-        private HomeViewModel GetPortfolioData()
+        private async Task<HomeViewModel> GetPortfolioData()
         {
             var about = new About
             {
@@ -96,7 +86,7 @@ namespace PortfolioWebsite.Controllers
                 new Project
                 {
                     Title = "Kronos App",
-                    Description = "Simple Remainder app with Alarm and Timer functionality.",
+                    Description = "Simple Reminder app with Alarm and Timer functionality.",
                     Technology = "HTML",
                     GithubLink = "https://github.com/Marky909/remainder-vibe"
                 }
