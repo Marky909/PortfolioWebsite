@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioWebsite.Data;
+using PortfolioWebsite.Models;
 
 namespace PortfolioWebsite.Controllers
 {
@@ -18,7 +19,7 @@ namespace PortfolioWebsite.Controllers
         // GET: /Messages
         public async Task<IActionResult> Index()
         {
-            var messages = await _context.ContactForms
+            List<ContactForm> messages = await _context.ContactForms
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
@@ -42,7 +43,7 @@ namespace PortfolioWebsite.Controllers
         // GET: /Messages/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var message = await _context.ContactForms
+            ContactForm? message = await _context.ContactForms
                 .FirstOrDefaultAsync(x => x.ContactFormId == id);
 
             if (message == null)

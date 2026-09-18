@@ -7,8 +7,8 @@ namespace PortfolioWebsite.Data
     {
         public static async Task SeedAsync(IServiceProvider services)
         {
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            RoleManager<IdentityRole> roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            UserManager<ApplicationUser> userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Create Admin role if it doesn't exist
             if (!await roleManager.RoleExistsAsync("Admin"))
